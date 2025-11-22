@@ -73,6 +73,31 @@
         </a-text>
 
       </a-entity>
+          
+            <!-- ICON INFO -->
+      <a-entity id="infoButton" class="clickable"
+                geometry="primitive: plane; width: 0.4; height: 0.4"
+                material="src: img/info.png; transparent: true"
+                position="1.5 2 -2"
+                onclick="toggleInfo()">
+      </a-entity>
+      
+      <!-- BOX + TEKS YANG MUNCUL -->
+      <a-entity id="infoBox" visible="false">
+        <a-plane width="3" height="1.5" color="#000" opacity="0.7" position="0 0 -2"></a-plane>
+        <a-text value="Ini adalah informasi tambahan tentang scene ini."
+                width="2.8"
+                align="center"
+                position="0 0 -1.99"
+                color="#FFD700"></a-text>
+      </a-entity>
+
+      <script>
+        function toggleInfo() {
+          const box = document.getElementById("infoBox");
+          box.setAttribute("visible", !box.getAttribute("visible"));
+        }
+      </script>
 
     </a-scene>
   </body>
