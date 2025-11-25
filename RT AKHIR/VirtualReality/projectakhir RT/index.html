@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+  </head>
+  <body>
+    <a-scene>
+      <!-- Kamera + Cursor -->
+      <a-entity id="cameraRig" camera look-controls>
+        <a-cursor
+          id="cursor"
+          color="#FFCC00"
+          fuse="false"
+          raycaster="objects: .clickable"
+          material="shader: flat">
+        </a-cursor>
+      </a-entity>
+
+      <!-- SKYBOX 1 -->
+      <a-sky id="sky1" src="candikidal1.jpeg" rotation="0 -90 0" visible="true"></a-sky>
+      <!-- SKYBOX 2 -->
+      <a-sky id="sky2" src="candikidal2.jpeg" rotation="0 -90 0" visible="false"></a-sky>
+
+      <!-- SPOT 1 -->
+      <a-entity id="spot1" position="0 2 -3" class="clickable"
+                geometry="primitive: plane; height: 0.6; width: 3"
+                material="transparent: true; opacity: 0">
+        <a-text
+          value="➡️ Masuk ke Pos Penjagaan"
+          color="#FFD700"
+          align="center"
+          width="6"
+          side="double">
+          <a-animation attribute="position"
+                       dur="2000"
+                       direction="alternate"
+                       repeat="indefinite"
+                       to="0 0.2 0"></a-animation>
+        </a-text>
+      </a-entity>
+
+      <!-- SPOT 2 -->
+      <a-entity id="spot2" position="0 2 -3" visible="false" class="clickable"
+                geometry="primitive: plane; height: 0.6; width: 3"
+                material="transparent: true; opacity: 0">
+        <a-text
+          value="⬅️ Kembali ke Pintu Masuk"
+          color="#00FFFF"
+          align="center"
+          width="6"
+          side="double">
+          <a-animation attribute="position"
+                       dur="2000"
+                       direction="alternate"
+                       repeat="indefinite"
+                       to="0 0.2 0"></a-animation>
+        </a-text>
+      </a-entity>
+    </a-scene>
+
+    <!-- SCRIPT -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const sky1 = document.querySelector("#sky1");
+        const sky2 = document.querySelector("#sky2");
+        const spot1 = document.querySelector("#spot1");
+        const spot2 = document.querySelector("#spot2");
+        const cursor = document.querySelector("#cursor");
+
+        function refreshRaycaster() {
+          // Trik agar raycaster mendeteksi ulang objek yang visible
+          cursor.components.raycaster.refreshObjects();
+        }
+
+        // Klik spot1 → pindah ke spot2
+        spot1.addEventListener("click", function () {
+          sky1.setAttribute("visible", "false");
+          sky2.setAttribute("visible", "true");
+          spot1.setAttribute("visible", "false");
+          spot2.setAttribute("visible", "true");
+          setTimeout(refreshRaycaster, 100); // refresh setelah pergantian
+        });
+
+        // Klik spot2 → balik ke spot1
+        spot2.addEventListener("click", function () {
+          sky1.setAttribute("visible", "true");
+          sky2.setAttribute("visible", "false");
+          spot1.setAttribute("visible", "true");
+          spot2.setAttribute("visible", "false");
+          setTimeout(refreshRaycaster, 100);
+        });
+      });
+    </script>
+  </body>
+</html>
