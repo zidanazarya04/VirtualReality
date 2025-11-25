@@ -1,0 +1,190 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Virtual Tour - Candi Kidal (Scene 1)</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,shrink-to-fit=no,user-scalable=no,minimal-ui">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="black">
+    <link rel="icon" sizes="965x354" href="https://virtual.ub.ac.id/wp-content/uploads/2020/09/logovirtual2.png">
+    
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+    <script src="js/aframe-href-component.js"></script>
+    
+    <style>
+      body { margin: 0; overflow: hidden; }
+    </style>
+
+    <script>
+      // --- FUNGSI BARU DITAMBAHKAN: SHOW POPUP ---
+      AFRAME.registerComponent('show-info', {
+        init: function () {
+          this.el.addEventListener('click', () => {
+            // Menonaktifkan raycaster saat popup aktif
+            document.querySelector('a-ring').setAttribute('cursor', 'raycaster', 'objects: none'); 
+            document.querySelector('#popupInfo').setAttribute('visible', true);
+          });
+        }
+      });
+
+      // --- FUNGSI BARU DITAMBAHKAN: HIDE POPUP ---
+      AFRAME.registerComponent('hide-info', {
+        init: function () {
+          this.el.addEventListener('click', () => {
+            document.querySelector('#popupInfo').setAttribute('visible', false);
+            // Mengaktifkan kembali raycaster 
+            document.querySelector('a-ring').setAttribute('cursor', 'raycaster', 'objects: .clickable; far: 30; interval: 1500'); 
+          });
+        }
+      });
+      
+      // --- FUNGSI BARU DITAMBAHKAN: KLIK ARTIKEL EKSTERNAL ---
+      AFRAME.registerComponent('open-article', {
+        init: function () {
+          this.el.addEventListener('click', () => {
+            // Tautan ke artikel Candi Kidal (terbuka di tab baru)
+            window.open('https://id.wikipedia.org/wiki/Candi_Kidal', '_blank'); 
+          });
+        }
+      });
+    </script>
+  </head>
+
+  <body data-gr-c-s-loaded="true">
+
+    <a-scene canvas="" keyboard-shortcuts="" vr-mode-ui="">
+      <a-entity position="0 1.8 4">
+        <a-camera id="camera" look-controls="" wasd-controls-enabled="false" camera="active:true" rotation="-1.3750987083139854 -3.0939720937064483 0" position="0 0 0">
+          <!-- Kursor Anda -->
+          <a-ring radius-outer="0.30" radius-inner="0.20" position="0 0 -3" material="color: cyan; shader: flat" cursor="maxDistance: 30; fuse: true" geometry="primitive:ring;radiusOuter:0.30;radiusInner:0.20" raycaster="objects: .clickable; far: 30; interval: 1500" scale="0.4628376812078244 0.4628376812078244 0.4628376812078244">
+            <a-animation begin="click" easing="ease-in" attribute="scale" fill="backwards" from="0.1 0.1 0.1" to="1 1 1" dur="150"></a-animation>
+            <a-animation begin="fusing" easing="ease-in" attribute="scale" fill="forwards" from="1 1 1" to="0.1 0.1 0.1" dur="1500"></a-animation>
+          </a-ring>
+        </a-camera>
+      </a-entity>
+
+
+      <!-- SKY 1 -->
+      <a-sky src="img/kidal depan.jpg" rotation="0 -90 0"></a-sky>
+
+
+      <!-- ===================== FITUR BARU: TOMBOL INFORMASI (Pemicu Popup) ===================== -->
+      <a-entity position="0 2.5 -2.5"> 
+
+        <a-plane class="clickable"
+                 show-info
+                 width="2.5" height="0.6" 
+                 color="#FFFF00"
+                 opacity="1.0"
+                 position="0 0 0"></a-plane>
+
+        <a-text value="ℹ️ INFORMASI CANDI KIDAL"
+                class="clickable"
+                show-info
+                align="center"
+                width="5" 
+                color="#000000"
+                position="0 0 0.02"></a-text>
+
+      </a-entity>
+      <!-- ======================================================================================= -->
+
+
+      <!-- ========================= FITUR BARU: POPUP INFORMASI =========================== -->
+      <a-entity id="popupInfo" visible="false">
+
+        <a-plane width="4" height="4" 
+                 color="black" opacity="0.95" 
+                 position="0 1.8 -1.5"> 
+        </a-plane>
+
+        <a-text value="CANDI KIDAL"
+                align="center" width="4.5"
+                color="#FFD700"
+                position="0 3.7 -1.4"> 
+        </a-text>
+
+        <a-text value="Candi Kidal adalah candi Hindu peninggalan Kerajaan Singhasari.\nDibangun untuk Raja Anusapati.\nMelambangkan perjalanan roh raja menuju alam dewa.\nBerlokasi di Rejokidal, Tumpang, Malang."
+                align="center"
+                width="3.2"
+                color="white"
+                position="0 2.6 -1.4"> 
+        </a-text>
+
+        
+        <a-entity 
+          class="clickable"
+          open-article 
+          position="0 1.4 -1.4"> 
+          
+          <a-plane width="2.5" height="0.5" 
+                   color="#0066AA" 
+                   position="0 0 0"></a-plane>
+          
+          <a-text value="ARTIKEL CANDI KIDAL 📚"
+                  align="center" width="4"
+                  color="#FFFFFF"
+                  position="0 0 0.02"></a-text>
+        </a-entity>
+        <a-plane width="1.2" height="0.5"
+                 color="red"
+                 class="clickable"
+                 hide-info
+                 position="0 0.7 -1.4"></a-plane> 
+                 
+        <a-text value="Tutup"
+                align="center" width="3"
+                color="#FFF"
+                position="0 0.7 -1.3"></a-text> 
+
+      </a-entity>
+      <!-- ======================================================================================= -->
+
+
+      <!-- BUTTON → NEXT (ke Scene 2) - STRUKTUR ASLI ANDA (DIKEMBALIKAN) -->
+      <a-entity position="0 1.8 -2">
+
+        <!-- kotak (Kembali ke prasasti) -->
+        <a-plane class="clickable"
+                 position="0 1.8 -2"
+                 width="3"
+                 height="0.7"
+                 color="#222"
+                 opacity="0"
+                 shader="flat"
+                 href="index5.html">
+        </a-plane>
+
+        <!-- kotak (Geser ke kanan) -->
+        <a-plane class="clickable"
+                 position="0 -1.8 -2"
+                 width="3"
+                 height="0.7"
+                 color="#222"
+                 opacity="0"
+                 shader="flat"
+                 href="index7.html">
+        </a-plane>
+
+        <!-- teks Geser ke kanan (DIKOREKSI KE index7.html) -->
+        <a-text value="➡️ Geser ke kanan"
+                align="center"
+                width="10"
+                color="#FFD700"
+                position="0 -1.8 -2"
+                href="index7.html">
+        </a-text>
+
+        <!-- teks Kembali ke area transisi/prasasti (DIKOREKSI KE index5.html) -->
+        <a-text value="⬅️ Kembali ke area transisi/prasasti"
+                align="center"
+                width="10"
+                color="#FFD700"
+                position="0 1.8 -2"
+                href="index5.html">
+        </a-text>
+
+      </a-entity>
+
+    </a-scene>
+  </body>
+</html>
