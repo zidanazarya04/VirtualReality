@@ -74,37 +74,46 @@
 
       </a-entity>
           
-      <!-- ICON INFO -->
-<a-entity id="infoButton" class="clickable"
-          geometry="primitive: plane; width: 0.4; height: 0.4"
-          material="src: img/info.png; transparent: true"
-                position="-2 2 4"
-                
-                onclick="toggleInfo()">
-      </a-entity>
 
       <!-- ICON INFO -->
 <a-entity id="infoButton" class="clickable"
           geometry="primitive: plane; width: 0.4; height: 0.4"
           material="src: img/info.png; transparent: true"
-          position="1.5 2 -2"
+          position="-4 2 4"
+          rotation="0 90 0"
           onclick="toggleInfo()">
 </a-entity>
       
       <!-- BOX + TEKS YANG MUNCUL -->
-      <a-entity id="infoBox" visible="false">
-        <a-plane width="3" height="1.5" color="#000" opacity="0.7" position="-2 2 4"></a-plane>
+      <a-entity id="infoBox" visible="false" position="-2 2 4" rotation="0 90 0">
+        <a-plane width="3" height="1.5" src="img/info1.jpg" opacity="1"></a-plane>
         <a-text value="Ini adalah informasi tambahan tentang scene ini."
                 width="2.8"
                 align="center"
-                position="0 2 2"
                 color="#FFD700"></a-text>
       </a-entity>
 
       <script>
+        let hideTimeout = null;
+      
         function toggleInfo() {
           const box = document.getElementById("infoBox");
-          box.setAttribute("visible", !box.getAttribute("visible"));
+          const isVisible = box.getAttribute("visible");
+        
+          // toggle visibility
+          const newState = !isVisible;
+          box.setAttribute("visible", newState);
+        
+          // jika info baru muncul → mulai timer untuk menyembunyikan otomatis
+          if (newState) {
+            // clear timer sebelumnya (kalau ada)
+            if (hideTimeout) clearTimeout(hideTimeout);
+          
+            // sembunyikan setelah 5 detik (ubah angka sesuai keinginan)
+            hideTimeout = setTimeout(() => {
+              box.setAttribute("visible", false);
+            }, 5000);
+          }
         }
       </script>
 
