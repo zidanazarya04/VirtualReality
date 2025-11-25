@@ -37,7 +37,8 @@
 
         <!-- kotak -->
         <a-plane class="clickable"
-                 position="0 1.8 -2"
+                position="0 1.8 10"
+                rotation="0 -180 0"
                  width="3"
                  height="0.7"
                  color="#222"
@@ -47,7 +48,8 @@
         </a-plane>
 
         <a-plane class="clickable"
-                 position="0 -1.8 -2"
+                position="0 -1.8 10"
+                rotation="0 -180 0"
                  width="3"
                  height="0.7"
                  color="#222"
@@ -62,14 +64,16 @@
                 align="center"
                 width="10"
                 color="#FFD700"
-                position="0 -1.8 -2">
+                position="0 -1.8 10"
+                rotation="0 -180 0">
         </a-text>
 
         <a-text value="➡️ Kembali ke area tengah"
                 align="center"
                 width="10"
                 color="#FFD700"
-                position="0 1.8 -2">
+                position="0 1.8 10"
+                rotation="0 -180 0">
         </a-text>
 
       </a-entity>
@@ -107,7 +111,7 @@
            opacity="0.7">
   </a-plane>
 
-  <a-text value="Ini adalah penjelasan dari gambar di kiri.\nBisa dibuat panjang."
+  <a-text value="Prasasti peresmian Candi Kidal dibangun setelah mengalami pemugaran dan diresmikan sebagai tempat bersejarah di Malang oleh Bapak Fuad Hassan pada tahun 1990"
           width="1.8"
           align="center"
           position="0 0 0.01"
@@ -131,7 +135,7 @@
     setTimeout(() => {
       img.setAttribute("visible", false);
       txt.setAttribute("visible", false);
-    }, 6000);
+    }, 30000);
   }
 </script>
 
