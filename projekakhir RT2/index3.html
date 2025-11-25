@@ -95,7 +95,7 @@
       <!-- INFO BOX 1 -->
       <a-entity id="infoBox1"
                 visible="false"
-                auto-hide-info="duration: 5000">
+                auto-hide-info="duration: 30000">
 
         <a-plane width="3" height="3" 
                  src="img/info1.jpg" opacity="1" 
@@ -107,7 +107,7 @@
       <!-- INFO BOX 2 -->
       <a-entity id="infoBox2"
                 visible="false"
-                auto-hide-info="duration: 5000">
+                auto-hide-info="duration: 30000">
 
         <a-plane width="5" height="5"
                  src="img/info2.jpg" opacity="1" 
@@ -119,7 +119,7 @@
       <script>
         AFRAME.registerComponent('auto-hide-info', {
           schema: {
-            duration: {type: 'number', default: 5000}
+            duration: {type: 'number', default: 30000}
           },
         
           init: function () {
