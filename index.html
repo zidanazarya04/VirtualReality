@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Virtual Tour Candi Kidal</title>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <style>
+    body { margin:0; font-family: sans-serif; }
+    #hud { position: absolute; left: 10px; top: 10px; color: #fff; z-index: 10;
+           background: rgba(0,0,0,0.45); padding:8px 12px; border-radius:6px; }
+    #nav { position: absolute; right: 10px; top: 10px; z-index: 10; display:flex; gap:8px; align-items:center; }
+    #nav button, #nav select { padding:6px 10px; border-radius:6px; border: none; background:#2c3e50; color:#fff; cursor:pointer; }
+    #nav button:active { transform: translateY(1px); }
+    #scene-title { font-weight:600; }
+    /* mobile adjustments */
+    @media (max-width:600px) {
+      #nav { right: 6px; top: 6px; gap:6px; }
+      #nav select { font-size:14px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="hud">
+    <div id="scene-title">Memuat...</div>
+  </div>
+
+  <div id="nav" aria-hidden="false">
+    <button id="prev" title="Sebelumnya">◀</button>
+    <select id="sceneSelect" aria-label="Pilih Spot"></select>
+    <button id="next" title="Berikutnya">▶</button>
+  </div>
+
+  <a-scene cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+    <a-assets>
+      <img id="gerbang" src="candi1.jpeg">
+      <img id="depan" src="candi2.jpeg">
+      <img id="tengah" src="candi3.jpeg">
+      <img id="kanan" src="candi4.jpeg">
+      <img id="kiri" src="candisix.jpeg">
+      <img id="belakang" src="candi7.jpeg">
+      <img id="km" src="candieight.jpeg">
+      <img id="pos" src="candi9.jpeg">
+      <img id="atas" src="candi10.jpeg">
+      
+    </a-assets>
+
+    <a-entity id="rig" position="0 1.6 0">
+      <a-camera></a-camera>
+    </a-entity>
+
+    <a-sky id="main-sky" radius="5000" src="#gerbang" rotation="0 -90 0"></a-sky>
+
+    <a-entity id="hotspots"></a-entity>
+  </a-scene>
+
+  <script>
+    const tourData = {
+      "Gerbang": {
+        title: "Gerbang Candi", img: "#gerbang",
+        hotspots: [
+          { target: "DepanCandi", text: "Depan Candi", yaw: 160, pitch: 0 },
+          { target: "KamarMandi", text: "Kamar Mandi", yaw: 280, pitch: -10 },
+          { target: null, text: "INFO", info: "Candi Kidal adalah candi pendharmaan Raja Anusapati.", yaw: -80, pitch: 10 }
+        ]
+      },
+      "DepanCandi": {
+        title: "Tampak Depan Candi Utama", img: "#depan",
+        hotspots: [
+          { target: "Gerbang", text: "Kembali Gerbang", yaw: 20, pitch: 0 },
+          { target: "KananCandi", text: "Sisi Kanan", yaw: 110, pitch: 0 },
+          { target: "SampingKiri", text: "Samping Kiri", yaw: 220, pitch: 0 },
+          { target: "TengahCandi", text: "Tengah Candi", yaw: 180, pitch: 5 },
+          { target: "SudutDepan", text: "Sudut Depan Lain", yaw: 320, pitch: 0 }
+        ]
+      },
+      "TengahCandi": {
+        title: "Tengah Area Candi", img: "#tengah",
+        hotspots: [
+          { target: "DepanCandi", text: "Ke Depan Candi", yaw: 270, pitch: 0 },
+          { target: "BelakangCandi", text: "Ke Belakang Candi", yaw: 90, pitch: 0 },
+          { target: "PojokAtas", text: "Pojok Atas", yaw: 0, pitch: 15 }
+        ]
+      },
+      "KananCandi": {
+        title: "Sisi Kanan Candi", img: "#kanan",
+        hotspots: [
+          { target: "DepanCandi", text: "Ke Depan Candi", yaw: 300, pitch: 0 },
+          { target: "BelakangCandi", text: "Ke Belakang Candi", yaw: 180, pitch: 0 }
+        ]
+      },
+      "SampingKiri": {
+        title: "Samping Kiri Candi", img: "#kiri",
+        hotspots: [
+          { target: "DepanCandi", text: "Ke Depan Candi", yaw: 100, pitch: 0 },
+          { target: "BelakangCandi", text: "Ke Belakang Candi", yaw: 250, pitch: 0 },
+          { target: "PosPenjaga", text: "Pos Penjaga", yaw: 0, pitch: -10 }
+        ]
+      },
+      "BelakangCandi": {
+        title: "Belakang Candi", img: "#belakang",
+        hotspots: [
+          { target: "KananCandi", text: "Ke Sisi Kanan", yaw: 10, pitch: 0 },
+          { target: "SampingKiri", text: "Ke Samping Kiri", yaw: 270, pitch: 0 },
+          { target: "TengahCandi", text: "Ke Tengah Candi", yaw: 180, pitch: 0 }
+        ]
+      },
+      "KamarMandi": {
+        title: "Area Kamar Mandi/Fasilitas", img: "#km",
+        hotspots: [
+          { target: "Gerbang", text: "Kembali ke Gerbang", yaw: 90, pitch: 0 }
+        ]
+      },
+      "PosPenjaga": {
+        title: "Pos Penjaga", img: "#pos",
+        hotspots: [
+          { target: "SampingKiri", text: "Ke Samping Kiri Candi", yaw: 180, pitch: 0 }
+        ]
+      },
+      "PojokAtas": {
+        title: "Pojok Atas Candi", img: "#atas",
+        hotspots: [
+          { target: "TengahCandi", text: "Ke Tengah Candi", yaw: 0, pitch: 0 }
+        ]
+      },
+      "SudutDepan": {
+        title: "Sudut Depan Candi (Tampak Depan)", img: "#sudutdepan",
+        hotspots: [
+          { target: "DepanCandi", text: "Ke Depan Candi Utama", yaw: 180, pitch: 0 }
+        ]
+      }
+    };
+
+    // Navigation state
+    const sceneNames = Object.keys(tourData);
+    let currentIndex = 0;
+
+    // Populate select
+    const sceneSelect = document.getElementById('sceneSelect');
+    sceneNames.forEach((name, idx) => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.text = `${idx+1}. ${tourData[name].title}`;
+      sceneSelect.appendChild(opt);
+    });
+
+    // Controls
+    document.getElementById('prev').addEventListener('click', () => {
+      currentIndex = (currentIndex - 1 + sceneNames.length) % sceneNames.length;
+      loadScene(sceneNames[currentIndex]);
+    });
+    document.getElementById('next').addEventListener('click', () => {
+      currentIndex = (currentIndex + 1) % sceneNames.length;
+      loadScene(sceneNames[currentIndex]);
+    });
+    sceneSelect.addEventListener('change', (e) => {
+      const name = e.target.value;
+      currentIndex = sceneNames.indexOf(name);
+      if (currentIndex === -1) currentIndex = 0;
+      loadScene(name);
+    });
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        document.getElementById('prev').click();
+      } else if (e.key === 'ArrowRight') {
+        document.getElementById('next').click();
+      } else if ((e.ctrlKey || e.metaKey) && e.key === '1') {
+        // jump to first
+        currentIndex = 0;
+        loadScene(sceneNames[currentIndex]);
+      }
+    });
+
+    function removeHotspots() {
+      const hotspotsEntity = document.getElementById('hotspots');
+      while (hotspotsEntity.firstChild) hotspotsEntity.removeChild(hotspotsEntity.firstChild);
+    }
+
+    function createHotspot(data) {
+      const hotspotsEntity = document.getElementById('hotspots');
+      const hotspot = document.createElement('a-entity');
+
+      const radius = 15;
+      const radYaw = THREE.Math.degToRad(data.yaw || 0);
+      const radPitch = THREE.Math.degToRad(data.pitch || 0);
+
+      const x = radius * Math.cos(radPitch) * Math.sin(radYaw);
+      const y = radius * Math.sin(radPitch);
+      const z = -radius * Math.cos(radPitch) * Math.cos(radYaw);
+
+      hotspot.setAttribute('position', `${x.toFixed(2)} ${y.toFixed(2)} ${z.toFixed(2)}`);
+      hotspot.setAttribute('look-at', '#rig');
+      hotspot.setAttribute('class', 'clickable');
+
+      if (data.target) {
+        hotspot.setAttribute('geometry', 'primitive: box; width: 2.5; height: 0.6; depth: 0.2');
+        hotspot.setAttribute('material', 'color: #2ECC71; opacity: 0.95');
+        hotspot.setAttribute('animation__scale', 'property: scale; to: 1.05 1.05 1.05; dur: 600; dir: alternate; loop: true');
+
+        const textEnt = document.createElement('a-entity');
+        textEnt.setAttribute('text', `value: ➡️ ${data.text} ➡️; color: white; align: center; wrapCount: 20; width: 6`);
+        textEnt.setAttribute('position', '0 1 0');
+        hotspot.appendChild(textEnt);
+
+        hotspot.addEventListener('click', () => {
+          loadScene(data.target);
+        });
+      } else if (data.info) {
+        hotspot.setAttribute('geometry', 'primitive: sphere; radius: 0.7');
+        hotspot.setAttribute('material', 'color: #E74C3C; opacity: 0.95');
+        hotspot.setAttribute('animation__rot', 'property: rotation; to: 0 360 0; dur: 5000; loop: true');
+
+        const textEnt = document.createElement('a-entity');
+        textEnt.setAttribute('text', `value: INFO; color: white; align: center; width: 3`);
+        textEnt.setAttribute('position', '0 1 0');
+        hotspot.appendChild(textEnt);
+
+        hotspot.addEventListener('click', () => {
+          // show simple overlay info (fallback to alert)
+          alert(data.info || 'Informasi tidak tersedia.');
+        });
+      }
+
+      hotspotsEntity.appendChild(hotspot);
+    }
+
+    function loadScene(sceneName) {
+      const sceneData = tourData[sceneName];
+      if (!sceneData) return;
+      const sky = document.getElementById('main-sky');
+      sky.setAttribute('material', 'src', sceneData.img);
+      document.getElementById('scene-title').innerText = 'Anda berada di: ' + sceneData.title;
+      removeHotspots();
+      sceneData.hotspots.forEach(createHotspot);
+
+      // sync select and currentIndex
+      const idx = sceneNames.indexOf(sceneName);
+      if (idx !== -1) {
+        currentIndex = idx;
+        sceneSelect.selectedIndex = idx;
+      }
+    }
+
+    // Start
+    document.querySelector('a-scene').addEventListener('loaded', function () {
+      loadScene(sceneNames[0]);
+    });
+
+    // Fallback: if aframe loaded after script
+    if (document.querySelector('a-scene').hasLoaded) {
+      loadScene(sceneNames[0]);
+    }
+  </script>
+</body>
+</html>
